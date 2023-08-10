@@ -7,10 +7,10 @@ ARG COMMITHASH=c1ec2d777456924dcaa59b53351b00d73caf378f
 
 # Ensure TARGETPLATFORM is set
 RUN case ${TARGETPLATFORM} in \
-    "linux/amd64") \
+    **amd64**) \
     echo "Building for linux/amd64" \
     ;; \
-    "linux/arm64") \
+    **arm**) \
     echo "Building for linux/arm64" \
     ;; \
     *) \
@@ -92,7 +92,7 @@ RUN set -x \
 
 # Cmake (Mbed OS requires >=3.19.0-rc3 version which is not available in Ubuntu 20.04 repository)
 RUN case ${TARGETPLATFORM} in \
-    "linux/amd64") \
+    **amd64**) \
     set -x \
     && (cd /tmp \
     && wget --progress=dot:giga https://github.com/Kitware/CMake/releases/download/v3.19.3/cmake-3.19.3-Linux-x86_64.sh \
@@ -100,7 +100,7 @@ RUN case ${TARGETPLATFORM} in \
     && rm -rf cmake-3.19.3-Linux-x86_64.sh) \
     && exec bash \
     ;; \
-    "linux/arm64") \
+    **arm64**) \
     set -x \
     && (cd /tmp \
     && wget --progress=dot:giga https://github.com/Kitware/CMake/releases/download/v3.19.3/cmake-3.19.3-Linux-aarch64.sh \
@@ -156,7 +156,6 @@ RUN set -x \
 RUN mkdir /root/connectedhomeip
 RUN git clone https://github.com/project-chip/connectedhomeip.git /root/connectedhomeip
 WORKDIR /root/connectedhomeip/
-RUN git checkout ${COMMITHASH}
 RUN ./scripts/checkout_submodules.py --allow-changing-global-git-config --shallow --platform linux
 RUN bash scripts/bootstrap.sh
 
@@ -169,7 +168,7 @@ SHELL ["/bin/bash", "-c"]
 RUN git rev-parse HEAD > /root/.sdk-sha-version
 
 RUN case ${TARGETPLATFORM} in \
-    "linux/amd64") \
+    **amd64**) \
     set -x \
     && source scripts/activate.sh \
     && scripts/build/build_examples.py \
@@ -203,7 +202,7 @@ RUN case ${TARGETPLATFORM} in \
     && mv out/linux-x64-lock-ipv6only/chip-lock-app out/chip-lock-app \
     && mv out/linux-x64-simulated-app1-ipv6only/chip-app1 out/chip-app1 \
     ;; \
-    "linux/arm64")\
+    **arm**)\
     set -x \
     && source scripts/activate.sh \
     && scripts/build/build_examples.py \
