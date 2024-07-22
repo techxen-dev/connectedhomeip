@@ -136,7 +136,7 @@ mypy-protobuf==3.5.0
     # via -r requirements.all.txt
 numpy==1.26.4
     # via pandas
-packaging==23.0
+packaging==24.1
     # via
     #   build
     #   fastcore
